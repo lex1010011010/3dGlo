@@ -184,11 +184,26 @@ window.addEventListener('DOMContentLoaded', () => {
     const slider = () => {
         const slide = document.querySelectorAll('.portfolio-item'),
             btn = document.querySelectorAll('.portfolio-btn'),
-            dot = document.querySelectorAll('.dot'),
-            slider = document.querySelector('.portfolio-content');
+            slider = document.querySelector('.portfolio-content'),
+            portfolioDots = document.querySelector('.portfolio-dots');
+
+
 
         let currentSlide = 0,
-            interval;
+            interval,
+            dot;
+
+        const addDots = () => {
+            for (let i = 0; i < slide.length; i++) {
+                const tmp = document.createElement('li');
+                tmp.classList.add('dot');
+                portfolioDots.append(tmp);
+                if (i === 0) {
+                    tmp.classList.add('dot-active');
+                }
+            }
+            return dot = document.querySelectorAll('.dot');
+        };
 
         const prevSlide = (elem, index, strClass) => {
             elem[index].classList.remove(strClass);
@@ -207,7 +222,6 @@ window.addEventListener('DOMContentLoaded', () => {
             }
             nextSlide(slide, currentSlide, 'portfolio-item-active');
             nextSlide(dot, currentSlide, 'dot-active');
-
         };
 
         const startSlide = (delay = 3000) => {
@@ -251,8 +265,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
             nextSlide(slide, currentSlide, 'portfolio-item-active');
             nextSlide(dot, currentSlide, 'dot-active');
-
-
         });
 
         slider.addEventListener('mouseover', event => {
@@ -266,10 +278,14 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        startSlide(5000);
+        startSlide(3000);
+        addDots();
+        console.log(slide.length);
 
+        // console.log(portfolioDots);
 
     };
+
     slider();
 });
 
