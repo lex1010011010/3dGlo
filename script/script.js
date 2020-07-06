@@ -54,17 +54,34 @@ window.addEventListener('DOMContentLoaded', () => {
         const btnMenu = document.querySelector('.menu'),
             menu = document.querySelector('menu'),
             closeBtn = document.querySelector('.close-btn'),
-            menuItems = menu.querySelectorAll('ul>li');
+            menuItems = menu.querySelectorAll('ul>li>a'),
+            scrollBtn = document.querySelector('main>a');
+
 
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
         };
+        //Scroll
+        const smoothScroll = blockID => {
+            event.preventDefault();
+            document.querySelector(blockID).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
 
-        btnMenu.addEventListener('click', handlerMenu);
+        btnMenu.addEventListener('click', () => {
+            handlerMenu();
+        });
         closeBtn.addEventListener('click', handlerMenu);
-        menuItems.forEach(item => item.addEventListener('click', handlerMenu));
-
-
+        scrollBtn.addEventListener('click', () => {
+            const blockID = scrollBtn.getAttribute('href');
+            smoothScroll(blockID);
+        });
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const blockID = item.getAttribute('href');
+                handlerMenu();
+                smoothScroll(blockID);
+            });
+        });
     };
     toggleMenu();
 
@@ -111,11 +128,6 @@ window.addEventListener('DOMContentLoaded', () => {
     popup();
 
 
-    //Scroll
-
-    const scroll = () => {
-
-    };
 
 });
 
