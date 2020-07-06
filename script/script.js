@@ -53,8 +53,10 @@ window.addEventListener('DOMContentLoaded', () => {
     const toggleMenu = () => {
         const btnMenu = document.querySelector('.menu'),
             menu = document.querySelector('menu'),
+            body = document.querySelector('body'),
             closeBtn = document.querySelector('.close-btn'),
             menuItems = menu.querySelectorAll('ul>li>a'),
+            main = document.querySelector('main'),
             scrollBtn = document.querySelector('main>a');
 
 
@@ -67,20 +69,29 @@ window.addEventListener('DOMContentLoaded', () => {
             document.querySelector(blockID).scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
-        btnMenu.addEventListener('click', () => {
-            handlerMenu();
-        });
-        closeBtn.addEventListener('click', handlerMenu);
-        scrollBtn.addEventListener('click', () => {
-            const blockID = scrollBtn.getAttribute('href');
-            smoothScroll(blockID);
-        });
-        menuItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const blockID = item.getAttribute('href');
+        body.addEventListener('click', event => {
+            let target = event.target;
+            if (target.matches('menu>ul>li>a')) {
+                const blockID = target.getAttribute('href');
                 handlerMenu();
                 smoothScroll(blockID);
-            });
+            } else if (target.matches('.close-btn')) {
+                handlerMenu();
+            } else if (target.matches('main>a>img')) {
+                const blockID = scrollBtn.getAttribute('href');
+                smoothScroll(blockID);
+            } else {
+                target = target.closest('.menu');
+                if (target) {
+                    handlerMenu();
+                    target = event.target;
+                } else {
+                    target = event.target;
+                    if (!target.classList.contains('active-menu') && menu.classList.contains('active-menu')) {
+                        handlerMenu();
+                    }
+                }
+            }
         });
     };
     toggleMenu();
@@ -121,14 +132,52 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-        popupClose.addEventListener('click', () => {
-            popupAnimateDown();
+
+        popup.addEventListener('click', event => {
+            let target = event.target;
+            if (target.classList.contains('popup-close')) {
+                popupAnimateDown();
+            } else {
+                target = target.closest('.popup-content');
+                if (!target) {
+                    popupAnimateDown();
+                }
+            }
         });
+
     };
     popup();
 
+    //Tasbs
+    const tabs = () => {
+        const tabHeader = document.querySelector('.service-header'),
+            tab = tabHeader.querySelectorAll('.service-header-tab'),
+            tabContent = document.querySelectorAll('.service-tab');
 
+        const togleTabContent = index => {
+            for (let i = 0; i < tabContent.length; i++) {
+                if (index === i) {
+                    tab[i].classList.add('active');
+                    tabContent[i].classList.remove('d-none');
+                } else {
+                    tab[i].classList.remove('active');
+                    tabContent[i].classList.add('d-none');
+                }
+            }
+        };
 
+        tabHeader.addEventListener('click', event => {
+            let target = event.target;
+            target = target.closest('.service-header-tab');
+            if (target) {
+                tab.forEach((item, i) => {
+                    if (item === target) {
+                        togleTabContent(i);
+                    }
+                });
+            }
+        });
+    };
+    tabs();
 });
-
 
