@@ -99,8 +99,8 @@ window.addEventListener('DOMContentLoaded', () => {
     //Popup
     const popup = () => {
         const popup = document.querySelector('.popup'),
-            popupBtn = document.querySelectorAll('.popup-btn'),
-            popupClose = document.querySelector('.popup-close');
+            popupBtn = document.querySelectorAll('.popup-btn');
+
         let count = 0;
         const popupAnimateUp = () => {
             const ren = requestAnimationFrame(popupAnimateUp);
