@@ -47,7 +47,7 @@ window.addEventListener('DOMContentLoaded', () => {
             timerSeconds.textContent = '00';
         }
     }
-    countTimer('12 july 2020');
+    countTimer('28 july 2020');
 
     //Menu
     const toggleMenu = () => {
@@ -280,12 +280,39 @@ window.addEventListener('DOMContentLoaded', () => {
 
         startSlide(3000);
         addDots();
-        console.log(slide.length);
+    };
+    slider();
 
-        // console.log(portfolioDots);
+    //Change photos
+    const changer = () => {
+        const command = document.querySelector('#command');
+        let tmp;
+        command.addEventListener('mouseover', event => {
+            const target = event.target;
+            if (target.classList.contains('command__photo')) {
+                tmp = target.src;
+                target.src = target.dataset.img;
+            }
+        });
+        command.addEventListener('mouseout', event => {
+            const target = event.target;
+            if (target.classList.contains('command__photo')) {
+                target.src = tmp;
+            }
+        });
+    };
+    changer();
+
+    //Validation
+    const validation = () => {
+        const calcItem = document.querySelectorAll('.calc-item');
+
+        calcItem.forEach(item => {
+            item.addEventListener('input', () => {
+                item.value = item.value.replace(/\D/, '');
+            });
+        });
 
     };
-
-    slider();
+    validation();
 });
-
