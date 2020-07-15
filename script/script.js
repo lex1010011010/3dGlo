@@ -51,12 +51,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Menu
     const toggleMenu = () => {
-        const btnMenu = document.querySelector('.menu'),
-            menu = document.querySelector('menu'),
+        const menu = document.querySelector('menu'),
             body = document.querySelector('body'),
-            closeBtn = document.querySelector('.close-btn'),
-            menuItems = menu.querySelectorAll('ul>li>a'),
-            main = document.querySelector('main'),
             scrollBtn = document.querySelector('main>a');
 
 
@@ -183,12 +179,8 @@ window.addEventListener('DOMContentLoaded', () => {
     //Slider
     const slider = () => {
         const slide = document.querySelectorAll('.portfolio-item'),
-            btn = document.querySelectorAll('.portfolio-btn'),
             slider = document.querySelector('.portfolio-content'),
             portfolioDots = document.querySelector('.portfolio-dots');
-
-
-
         let currentSlide = 0,
             interval,
             dot;
@@ -316,7 +308,6 @@ window.addEventListener('DOMContentLoaded', () => {
     };
     validation();
 
-
     //Calc
     const calc = (price = 100) => {
         const calcBlock = document.querySelector('.calc-block'),
@@ -350,15 +341,24 @@ window.addEventListener('DOMContentLoaded', () => {
             totalValue.textContent = total;
         };
 
-
         calcBlock.addEventListener('change', event => {
             const target = event.target;
-            if (target.matches('select') || target.matches('input')) {
+            if (target === calcType || target === calcSquare || target === calcDay || target === calcCount) {
                 countSum();
             }
         });
 
+        const animation = (count) => {
+            totalValue.textContent = count;
 
+        };
+
+        animation(52000);
     };
+
+
     calc(100);
+
+
+
 });
