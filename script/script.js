@@ -297,14 +297,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Validation
     const validation = () => {
-        const calcItem = document.querySelectorAll('.calc-item');
-
+        const calcItem = document.querySelectorAll('calc-item');
         calcItem.forEach(item => {
-            item.addEventListener('input', () => {
-                item.value = item.value.replace(/\D/, '');
-            });
+            if (!item.classList.contains('.calc-type')) {
+                item.addEventListener('input', () => {
+                    item.value = item.value.replace(/\D/, '');
+                });
+            }
         });
-
     };
     validation();
 
@@ -347,18 +347,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 countSum();
             }
         });
-
-        const animation = (count) => {
-            totalValue.textContent = count;
-
-        };
-
-        animation(52000);
     };
-
-
     calc(100);
-
-
-
 });
