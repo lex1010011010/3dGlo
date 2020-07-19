@@ -361,10 +361,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const form1 = document.getElementById('form1'),
             form2 = document.getElementById('form2'),
             form3 = document.getElementById('form3'),
-            forms = document.querySelectorAll('form'),
-            tels = document.querySelectorAll('input[type=tel]');
-
-        console.log(tels);
+            forms = document.querySelectorAll('form');
 
         const postData = body => {
             return new Promise((resolve, reject) => {
@@ -373,10 +370,10 @@ window.addEventListener('DOMContentLoaded', () => {
                     if (request.readyState !== 4) {
                         return;
                     }
-                    if (request.status === 201) {
+                    if (request.status === 200) {
                         resolve();
                     } else {
-                        reject(request.status);
+                        reject(console.error(request.status));
                     }
                 });
                 request.open('POST', './server.php');
@@ -398,6 +395,41 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
+        const validPhone = form => {
+            const inputPhone = form.querySelector('.form-phone');
+            const test = /^(8|\+7)?[\d]{10}$/.test(inputPhone.value);
+            if (!test) {
+                inputPhone.style.border = 'solid 1px red';
+            } else {
+                inputPhone.style.border = '';
+            }
+            return test;
+        };
+
+        const validText = form => {
+            const inputText = form.querySelectorAll('input[type=text]');
+            let result = true;
+            inputText.forEach(item => {
+                const test = /[а-яА-ЯёЁ\s]/.test(item.value);
+                if (!test) {
+                    result = false;
+                    item.style.border = 'solid 1px red';
+                } else {
+                    item.style.border = '';
+                }
+            });
+            return result;
+        };
+
+        const denyText = form => {
+            const inputText = form.querySelectorAll('input[type=text]');
+            inputText.forEach(item => {
+                item.addEventListener('input', () => {
+                    item.value = item.value.replace(/[^а-яА-ЯёЁ\s]/, '');
+                });
+            });
+        };
+
         form1.addEventListener('submit', event => {
             event.preventDefault();
             form1.append(statusMessage);
@@ -416,7 +448,6 @@ window.addEventListener('DOMContentLoaded', () => {
                     })
                     .catch(() => {
                         statusMessage.textContent = errorMessage;
-                        console.error(request.status);
                     });
 
             } else {
@@ -431,13 +462,16 @@ window.addEventListener('DOMContentLoaded', () => {
             formData.forEach((val, key) => {
                 body[key] = val;
             });
-            postData(body, () => {
-                statusMessage.textContent = successMessage;
-                clearInput(form2);
-            }, error => {
-                statusMessage.textContent = errorMessage;
-                console.error(error);
-            });
+            if (validPhone(form2) && validText(form2)) {
+                postData(body)
+                    .then(() => {
+                        statusMessage.textContent = successMessage;
+                        clearInput(form2);
+                    })
+                    .catch(() => {
+                        statusMessage.textContent = errorMessage;
+                    });
+            }
         });
 
         form3.addEventListener('submit', event => {
@@ -447,57 +481,23 @@ window.addEventListener('DOMContentLoaded', () => {
             formData.forEach((val, key) => {
                 body[key] = val;
             });
-            if (validPhone(form3)) {
-                postData(body, () => {
-                    statusMessage.textContent = successMessage;
-                    clearInput(form3);
-                }, error => {
-                    statusMessage.textContent = errorMessage;
-                    console.error(error);
-                });
-            } else {
-                statusMessage.textContent = errorInput;
+            if (validPhone(form3) && validText(form3)) {
+                postData(body)
+                    .then(() => {
+                        statusMessage.textContent = successMessage;
+                        clearInput(form3);
+                    })
+                    .catch(() => {
+                        statusMessage.textContent = errorMessage;
+                    });
             }
         });
-        // maskPhone('.form-phone');
 
-        const validPhone = form => {
-            const inputPhone = form.querySelector('.form-phone');
-            const test = /^(8|\+7)?[\d]{10}$/.test(inputPhone.value);
-            if (!test) {
-                inputPhone.style.border = 'solid 1px red';
-            } else {
-                inputPhone.style.border = '';
-            }
-            console.log(test);
-            return test;
-        };
-
-        const validText = form => {
-            const inputText = form.querySelectorAll('input[type=text]');
-            let result = true;
-            inputText.forEach(item => {
-                const test = /[а-яА-ЯёЁ\s]/.test(item.value);
-                if (!test) {
-                    result = false;
-                    item.style.border = 'solid 1px red';
-                }
-            });
-            return result;
-        };
-
-        const denyText = form => {
-            const inputText = form.querySelectorAll('input[type=text]');
-            console.log('inputText: ', inputText);
-            inputText.forEach(item => {
-                item.addEventListener('input', () => {
-                    item.value = item.value.replace(/[^а-яА-ЯёЁ\s]/, '');
-                });
-            });
-        };
         forms.forEach(elem => {
             denyText(elem);
         });
+        // maskPhone('.form-phone');
+
     };
     sendForm();
 
