@@ -366,21 +366,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
         console.log(tels);
 
-        const postData = (body, outputData, errorData) => {
-            const request = new XMLHttpRequest();
-            request.addEventListener('readystatechange', () => {
-                if (request.readyState !== 4) {
-                    return;
-                }
-                if (request.status === 200) {
-                    outputData();
-                } else {
-                    errorData(request.status);
-                }
+        const postData = body => {
+            return new Promise((resolve, reject) => {
+                const request = new XMLHttpRequest();
+                request.addEventListener('readystatechange', () => {
+                    if (request.readyState !== 4) {
+                        return;
+                    }
+                    if (request.status === 201) {
+                        resolve();
+                    } else {
+                        reject(request.status);
+                    }
+                });
+                request.open('POST', './server.php');
+                request.setRequestHeader('Content-Type', 'application/json');
+                request.send(JSON.stringify(body));
             });
-            request.open('POST', './server.php');
-            request.setRequestHeader('Content-Type', 'application/json');
-            request.send(JSON.stringify(body));
+
         };
 
         const clearInput = form => {
@@ -406,13 +409,16 @@ window.addEventListener('DOMContentLoaded', () => {
             });
 
             if (validPhone(form1) && validText(form1)) {
-                postData(body, () => {
-                    statusMessage.textContent = successMessage;
-                    clearInput(form1);
-                }, error => {
-                    statusMessage.textContent = errorMessage;
-                    console.error(error);
-                });
+                postData(body)
+                    .then(() => {
+                        statusMessage.textContent = successMessage;
+                        clearInput(form1);
+                    })
+                    .catch(() => {
+                        statusMessage.textContent = errorMessage;
+                        console.error(request.status);
+                    });
+
             } else {
                 statusMessage.textContent = errorInput;
             }
@@ -486,7 +492,6 @@ window.addEventListener('DOMContentLoaded', () => {
             inputText.forEach(item => {
                 item.addEventListener('input', () => {
                     item.value = item.value.replace(/[^а-яА-ЯёЁ\s]/, '');
-                    console.log(item.value);
                 });
             });
         };
