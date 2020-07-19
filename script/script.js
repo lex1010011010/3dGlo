@@ -349,4 +349,151 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     };
     calc(100);
+
+    //Send-ajax-form
+
+    const sendForm = () => {
+        const errorMessage = 'Что-то пошло не так....',
+            loadMessage = 'Загрузка...',
+            successMessage = 'Спасибо! Мы скоро с вами свяжемся!!',
+            errorInput = 'Ошибка ввода';
+
+        const form1 = document.getElementById('form1'),
+            form2 = document.getElementById('form2'),
+            form3 = document.getElementById('form3'),
+            forms = document.querySelectorAll('form'),
+            tels = document.querySelectorAll('input[type=tel]');
+
+        console.log(tels);
+
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status === 200) {
+                    outputData();
+                } else {
+                    errorData(request.status);
+                }
+            });
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.send(JSON.stringify(body));
+        };
+
+        const clearInput = form => {
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach(elem => {
+                elem.value = '';
+            });
+        };
+
+        const statusMessage = document.createElement('div');
+        statusMessage.style.cssText = 'font-size: 2rem;';
+
+
+
+        form1.addEventListener('submit', event => {
+            event.preventDefault();
+            form1.append(statusMessage);
+            statusMessage.textContent = loadMessage;
+            const formData = new FormData(form1);
+            const body = {};
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });
+
+            if (validPhone(form1) && validText(form1)) {
+                postData(body, () => {
+                    statusMessage.textContent = successMessage;
+                    clearInput(form1);
+                }, error => {
+                    statusMessage.textContent = errorMessage;
+                    console.error(error);
+                });
+            } else {
+                statusMessage.textContent = errorInput;
+            }
+        });
+
+        form2.addEventListener('submit', event => {
+            event.preventDefault();
+            const formData = new FormData(form2);
+            const body = {};
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });
+            postData(body, () => {
+                statusMessage.textContent = successMessage;
+                clearInput(form2);
+            }, error => {
+                statusMessage.textContent = errorMessage;
+                console.error(error);
+            });
+        });
+
+        form3.addEventListener('submit', event => {
+            event.preventDefault();
+            const formData = new FormData(form3);
+            const body = {};
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });
+            if (validPhone(form3)) {
+                postData(body, () => {
+                    statusMessage.textContent = successMessage;
+                    clearInput(form3);
+                }, error => {
+                    statusMessage.textContent = errorMessage;
+                    console.error(error);
+                });
+            } else {
+                statusMessage.textContent = errorInput;
+            }
+        });
+        // maskPhone('.form-phone');
+
+        const validPhone = form => {
+            const inputPhone = form.querySelector('.form-phone');
+            const test = /^(8|\+7)?[\d]{10}$/.test(inputPhone.value);
+            if (!test) {
+                inputPhone.style.border = 'solid 1px red';
+            } else {
+                inputPhone.style.border = '';
+            }
+            console.log(test);
+            return test;
+        };
+
+        const validText = form => {
+            const inputText = form.querySelectorAll('input[type=text]');
+            let result = true;
+            inputText.forEach(item => {
+                const test = /[а-яА-ЯёЁ\s]/.test(item.value);
+                if (!test) {
+                    result = false;
+                    item.style.border = 'solid 1px red';
+                }
+            });
+            return result;
+        };
+
+        const denyText = form => {
+            const inputText = form.querySelectorAll('input[type=text]');
+            console.log('inputText: ', inputText);
+            inputText.forEach(item => {
+                item.addEventListener('input', () => {
+                    item.value = item.value.replace(/[^а-яА-ЯёЁ\s]/, '');
+                    console.log(item.value);
+                });
+            });
+        };
+        forms.forEach(elem => {
+            denyText(elem);
+        });
+    };
+    sendForm();
+
 });
