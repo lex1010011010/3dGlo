@@ -364,23 +364,13 @@ window.addEventListener('DOMContentLoaded', () => {
             forms = document.querySelectorAll('form');
 
         const postData = body => {
-            return new Promise((resolve, reject) => {
-                const request = new XMLHttpRequest();
-                request.addEventListener('readystatechange', () => {
-                    if (request.readyState !== 4) {
-                        return;
-                    }
-                    if (request.status === 200) {
-                        resolve();
-                    } else {
-                        reject(console.error(request.status));
-                    }
-                });
-                request.open('POST', './server.php');
-                request.setRequestHeader('Content-Type', 'application/json');
-                request.send(JSON.stringify(body));
+            return fetch('./server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
             });
-
         };
 
         const clearInput = form => {
@@ -442,11 +432,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
             if (validPhone(form1) && validText(form1)) {
                 postData(body)
-                    .then(() => {
+                    .then(response => {
+                        if (response.status !== 200) {
+                            throw new Error('status network not 200')
+                        }
                         statusMessage.textContent = successMessage;
                         clearInput(form1);
                     })
-                    .catch(() => {
+                    .catch(error => {
+                        console.error(error);
                         statusMessage.textContent = errorMessage;
                     });
 
@@ -464,13 +458,18 @@ window.addEventListener('DOMContentLoaded', () => {
             });
             if (validPhone(form2) && validText(form2)) {
                 postData(body)
-                    .then(() => {
+                    .then(response => {
+                        if (response.status !== 200) {
+                            throw new Error('status network not 200')
+                        }
                         statusMessage.textContent = successMessage;
                         clearInput(form2);
                     })
-                    .catch(() => {
+                    .catch(error => {
+                        console.error(error);
                         statusMessage.textContent = errorMessage;
                     });
+
             }
         });
 
@@ -483,13 +482,18 @@ window.addEventListener('DOMContentLoaded', () => {
             });
             if (validPhone(form3) && validText(form3)) {
                 postData(body)
-                    .then(() => {
+                    .then(response => {
+                        if (response.status !== 200) {
+                            throw new Error('status network not 200')
+                        }
                         statusMessage.textContent = successMessage;
                         clearInput(form3);
                     })
-                    .catch(() => {
+                    .catch(error => {
+                        console.error(error);
                         statusMessage.textContent = errorMessage;
                     });
+
             }
         });
 
