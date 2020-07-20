@@ -121,7 +121,7 @@ const sendForm = () => {
         statusMessage.style.fontSize = '1.5rem';
         statusMessage.style.color = 'white';
 
-        statusMessage.textContent = loadMessage;
+
         const formData = new FormData(form3);
         const body = {};
         formData.forEach((val, key) => {
@@ -130,6 +130,7 @@ const sendForm = () => {
         if (validPhone(form3) && validText(form3)) {
             postData(body)
                 .then(response => {
+
                     if (response.status !== 200) {
                         throw new Error('status network not 200');
                     }
