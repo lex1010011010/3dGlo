@@ -1,9 +1,14 @@
 const countTimer = deadline => {
-    const timerHours = document.querySelector('#timer-hours'),
+    const timerNumbers = document.querySelector('.timer-numbers'),
+        timerHours = document.querySelector('#timer-hours'),
         timerMinutes = document.querySelector('#timer-minutes'),
         timerSeconds = document.querySelector('#timer-seconds');
 
+    timerNumbers.style.opacity = 0;
 
+    setTimeout(() => {
+        timerNumbers.style.opacity = 1;
+    }, 1000);
     function getTimeRamaining() {
         const dateStop = new Date(deadline).getTime(),
             dateNow = new Date().getTime(),
@@ -33,7 +38,6 @@ const countTimer = deadline => {
             }, 1000);
         }
     }
-
     const check = getTimeRamaining();
     if (check.timeRamainig > 0) {
         updateClock();
