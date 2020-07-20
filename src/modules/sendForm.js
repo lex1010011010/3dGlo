@@ -117,6 +117,11 @@ const sendForm = () => {
 
     form3.addEventListener('submit', event => {
         event.preventDefault();
+        form3.append(statusMessage);
+        statusMessage.style.fontSize = '1.5rem';
+        statusMessage.style.color = 'white';
+
+        statusMessage.textContent = loadMessage;
         const formData = new FormData(form3);
         const body = {};
         formData.forEach((val, key) => {

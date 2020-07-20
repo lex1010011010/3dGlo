@@ -4,11 +4,6 @@ const countTimer = deadline => {
         timerMinutes = document.querySelector('#timer-minutes'),
         timerSeconds = document.querySelector('#timer-seconds');
 
-    timerNumbers.style.opacity = 0;
-
-    setTimeout(() => {
-        timerNumbers.style.opacity = 1;
-    }, 1000);
     function getTimeRamaining() {
         const dateStop = new Date(deadline).getTime(),
             dateNow = new Date().getTime(),
@@ -35,7 +30,7 @@ const countTimer = deadline => {
                 timerHours.textContent = addZero(timer.hours);
                 timerMinutes.textContent = addZero(timer.minutes);
                 timerSeconds.textContent = addZero(timer.seconds);
-            }, 1000);
+            }, 0);
         }
     }
     const check = getTimeRamaining();
